@@ -24,7 +24,7 @@ export const Header = () => {
 
           <Link href="/" className="flex items-center gap-2">
             <span className="text-xl font-bold tracking-tighter text-gray-900">
-              Turbo<span className="text-blue-600">Commerce</span>.
+              E<span className="text-blue-600">shop</span>.
             </span>
           </Link>
 
