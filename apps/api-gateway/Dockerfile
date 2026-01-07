@@ -1,11 +1,20 @@
-FROM node:20-alpine
+FROM node:20-slim as base
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml* ./
-RUN npm install -g pnpm && pnpm install
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 
-COPY . .
+COPY apps/api-gateway ./apps/api-gateway
+
+RUN pnpm install --frozen-lockfile
+
+WORKDIR /app/apps/api-gateway
+
+RUN pnpm build
 
 EXPOSE 4000
 
