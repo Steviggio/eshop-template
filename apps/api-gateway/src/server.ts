@@ -23,6 +23,33 @@ const PRODUCT_DB: Record<
   "4": { name: "Watch Series X", price: 399.0, stock: 15 },
 };
 
+server.get("/api/health", async (request, reply) => {
+  try {
+    return { status: "ok" };
+  } catch (error) {
+    server.log.error(error);
+    return reply
+      .code(500)
+      .send({ error: "Erreur lors de la récupération de l'état de santé" });
+  }
+});
+
+server.get("/api/products", async (request, reply) => {
+  try {
+    return Object.entries(PRODUCT_DB).map(([id, product]) => ({
+      id,
+      name: product.name,
+      price: product.price,
+      stock: product.stock,
+    }));
+  } catch (error) {
+    server.log.error(error);
+    return reply
+      .code(500)
+      .send({ error: "Erreur lors de la récupération des produits" });
+  }
+});
+
 interface CartItemPayload {
   id: string;
   quantity: number;
