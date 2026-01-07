@@ -15,9 +15,9 @@ Un squelette d'application e-commerce modulaire séparant le frontend (Storefron
 
 ```bash
 pnpm install
-Configuration
-Créez les fichiers d'environnement nécessaires :
 ```
+
+Créez les fichiers d'environnement nécessaires :
 
 ### Backend
 
@@ -32,10 +32,10 @@ STRIPE_SECRET_KEY=sk_test_...
 ### Frontend
 
 Chemin : apps/storefront/.env.local
+
 ```
 NEXT_PUBLIC_API_URL=http://localhost:4000
 ```
-
 
 Pour lancer l'environnement de développement complet, ouvrez deux terminaux :
 
@@ -54,4 +54,3 @@ pnpm dev
 ```
 
 L'application est accessible sur : http://localhost:3000
-
