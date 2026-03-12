@@ -1,12 +1,19 @@
 {
   "name": "eshop-template",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Headless e-commerce integration funnel template — Next.js + Express + shadcn/ui",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "pnpm --parallel --filter storefront --filter api-gateway dev",
+    "dev:api": "pnpm --filter api-gateway dev",
+    "dev:web": "pnpm --filter storefront dev",
+    "build": "pnpm --filter storefront build && pnpm --filter api-gateway build",
+    "build:web": "pnpm --filter storefront build",
+    "build:api": "pnpm --filter api-gateway build",
+    "typecheck": "pnpm --filter api-gateway typecheck",
+    "lint": "pnpm --filter storefront lint"
   },
-  "keywords": [],
+  "keywords": ["eshop", "template", "nextjs", "express", "shadcn", "monorepo"],
   "author": "",
   "license": "ISC"
 }
