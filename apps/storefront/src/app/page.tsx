@@ -1,5 +1,17 @@
-import { ProductCard } from "@/features/products/components/ProductCard";
+import { Metadata } from "next";
+import { ProductGrid } from "@/features/products/components/ProductGrid";
 import { Product } from "@/features/products/types";
+import { Badge } from "@/components/ui/badge";
+
+export const metadata: Metadata = {
+  title: "Accueil | Eshop Template",
+  description: "Découvrez notre sélection pointue de produits conçus pour allier esthétique, performance et durabilité.",
+  openGraph: {
+    title: "Accueil | Eshop Template",
+    description: "L'excellence du lifestyle moderne. Découvrez notre nouvelle collection.",
+    type: "website",
+  },
+};
 
 const MOCK_PRODUCTS: Product[] = [
   {
@@ -10,6 +22,7 @@ const MOCK_PRODUCTS: Product[] = [
     price: 149.0,
     currency: "EUR",
     stock: 10,
+    category: "Vêtements",
     thumbnail:
       "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1000&auto=format&fit=crop",
     images: [],
@@ -22,6 +35,7 @@ const MOCK_PRODUCTS: Product[] = [
     price: 189.99,
     currency: "EUR",
     stock: 5,
+    category: "Chaussures",
     thumbnail:
       "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000&auto=format&fit=crop",
     images: [],
@@ -34,6 +48,7 @@ const MOCK_PRODUCTS: Product[] = [
     price: 299.0,
     currency: "EUR",
     stock: 2,
+    category: "Accessoires",
     thumbnail:
       "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=1000&auto=format&fit=crop",
     images: [],
@@ -46,43 +61,99 @@ const MOCK_PRODUCTS: Product[] = [
     price: 399.0,
     currency: "EUR",
     stock: 15,
+    category: "High-Tech",
     thumbnail:
       "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
+    images: [],
+  },
+  {
+    id: "5",
+    slug: "casque-audio-pro",
+    name: "Aura Studio Headphones",
+    description:
+      "Réduction de bruit active et son haute fidélité pour les audiophiles.",
+    price: 249.0,
+    currency: "EUR",
+    stock: 8,
+    category: "High-Tech",
+    thumbnail:
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop",
+    images: [],
+  },
+  {
+    id: "6",
+    slug: "tapis-yoga-premium",
+    name: "ZenMat Pro",
+    description:
+      "Épaisseur optimale et grip antidérapant pour des séances parfaites.",
+    price: 65.0,
+    currency: "EUR",
+    stock: 20,
+    category: "Sport",
+    thumbnail:
+      "https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=1000&auto=format&fit=crop",
+    images: [],
+  },
+  {
+    id: "7",
+    slug: "lampe-bureau-design",
+    name: "Lumina Minimalist",
+    description: "Éclairage LED ajustable avec design épuré en aluminium.",
+    price: 89.0,
+    currency: "EUR",
+    stock: 12,
+    category: "Maison",
+    thumbnail:
+      "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?q=80&w=1000&auto=format&fit=crop",
+    images: [],
+  },
+  {
+    id: "8",
+    slug: "lunettes-soleil-vintage",
+    name: "Retro Shades",
+    description: "Protection UV400 avec monture écaille classique.",
+    price: 110.0,
+    currency: "EUR",
+    stock: 3,
+    category: "Accessoires",
+    thumbnail:
+      "https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=1000&auto=format&fit=crop",
     images: [],
   },
 ];
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-gray-50/50">
-      <section className="bg-white py-20 border-b border-gray-100">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-6xl">
-            Eshop
+    <main className="min-h-screen bg-background selection:bg-primary/10 selection:text-primary">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden border-b border-border/40 pt-24 pb-32">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/10 opacity-80" />
+        </div>
+        <div className="relative z-10 container mx-auto px-4 text-center max-w-4xl">
+          <Badge
+            variant="secondary"
+            className="mb-8 gap-2 px-4 py-1.5 text-sm"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+            </span>
+            Nouvelle collection disponible
+          </Badge>
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-foreground mb-6">
+            L&apos;excellence du <br className="hidden sm:block" />
+            <span className="text-primary">lifestyle moderne.</span>
           </h1>
-          <p className="mt-4 text-xl text-gray-500">
-            Bienvenue sur le template e-commerce Next.js prêt à l&apos;emploi.
+          <p className="mt-4 text-lg md:text-xl text-muted-foreground font-light leading-relaxed max-w-2xl mx-auto">
+            Découvrez notre sélection pointue de produits conçus pour allier
+            esthétique, performance et durabilité.
           </p>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-            Nouveautés
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          {MOCK_PRODUCTS.map((product, index) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              priority={index === 0}
-            />
-          ))}
-        </div>
-      </section>
+      {/* Products Section (Interactive Client Component) */}
+      <ProductGrid initialProducts={MOCK_PRODUCTS} />
     </main>
   );
 }

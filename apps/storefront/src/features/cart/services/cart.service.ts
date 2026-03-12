@@ -36,15 +36,22 @@ export const validateCart = async (
 export const createCheckoutSession = async (
   items: CartItem[]
 ): Promise<string> => {
-  const payload = items.map((item) => ({
-    id: item.id,
-    quantity: item.quantity,
-  }));
+  // Pedagogy: Centralizing error handling at the service boundary 
+  // ensuring the UI component only deals with standard Promise rejections.
+  try {
+    const payload = items.map((item) => ({
+      id: item.id,
+      quantity: item.quantity,
+    }));
 
-  const { data } = await axios.post<CheckoutResponse>(
-    `${API_URL}/api/create-checkout-session`,
-    { items: payload }
-  );
+    const { data } = await axios.post<CheckoutResponse>(
+      `${API_URL}/api/create-checkout-session`,
+      { items: payload }
+    );
 
-  return data.url;
+    return data.url;
+  } catch (error) {
+    console.error("Error creating checkout session:", error);
+    throw error;
+  }
 };

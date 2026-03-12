@@ -1,17 +1,22 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "motion/react";
 import { ShoppingCart } from "lucide-react";
 import { useCartStore } from "@/features/cart/store/useCartStore";
 import { Product } from "@/features/products/types";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 interface ProductCardProps {
   product: Product;
   className?: string;
-  priority?: boolean; 
+  priority?: boolean;
 }
 
 export const ProductCard = ({
@@ -26,6 +31,8 @@ export const ProductCard = ({
     currency: product.currency,
   }).format(product.price);
 
+  const isOutOfStock = product.stock === 0;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -36,57 +43,75 @@ export const ProductCard = ({
       "@type": "Offer",
       price: product.price,
       priceCurrency: product.currency,
-      availability: "https://schema.org/InStock",
+      availability: isOutOfStock
+        ? "https://schema.org/OutOfStock"
+        : "https://schema.org/InStock",
     },
   };
 
   return (
-    <div className={cn("group relative flex flex-col gap-4", className)}>
+    <Card
+      className={cn(
+        "group border-border/40 bg-card/80 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden",
+        className
+      )}
+    >
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="relative aspect-3/4 w-full overflow-hidden rounded-xl bg-gray-100 shadow-sm">
+      <div className="relative aspect-3/4 w-full overflow-hidden bg-muted">
         <Image
           src={product.thumbnail}
           alt={product.name}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
           priority={priority}
-          // blurDataURL à ajouter pour le placeholder si nécessaire
         />
 
-        <div className="absolute bottom-4 right-4 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            onClick={(e) => {
-              e.preventDefault(); 
-              addItem(product);
-              toast.success(`${product.name} ajouté au panier !`);
-            }}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white shadow-lg hover:bg-gray-800"
-            aria-label="Ajouter au panier"
-          >
-            <ShoppingCart size={18} strokeWidth={2.5} />
-          </motion.button>
-        </div>
+        {isOutOfStock && (
+          <div className="absolute inset-0 bg-background/60 flex items-center justify-center">
+            <Badge variant="secondary" className="text-sm">
+              Rupture de stock
+            </Badge>
+          </div>
+        )}
+
+        {!isOutOfStock && (
+          <div className="absolute bottom-3 right-3 translate-y-3 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 z-10">
+            <Button
+              size="icon"
+              onClick={(e) => {
+                e.preventDefault();
+                addItem(product);
+                toast.success(`${product.name} ajouté au panier !`);
+              }}
+              className="h-10 w-10 rounded-full shadow-lg"
+              aria-label="Ajouter au panier"
+            >
+              <ShoppingCart size={18} />
+            </Button>
+          </div>
+        )}
       </div>
 
-      <div className="flex justify-between items-start">
-        <div className="space-y-1">
-          <h3 className="text-base font-medium text-gray-900 leading-none">
-            {product.name}
-          </h3>
-          <p className="text-sm text-gray-500 line-clamp-1">
-            {product.description}
+      <CardContent className="p-4">
+        <div className="flex justify-between items-start gap-2">
+          <div className="space-y-1 min-w-0">
+            <h3 className="text-sm font-semibold text-card-foreground leading-none tracking-tight truncate">
+              {product.name}
+            </h3>
+            <p className="text-xs text-muted-foreground line-clamp-1 leading-relaxed">
+              {product.description}
+            </p>
+          </div>
+          <p className="text-sm font-bold text-primary shrink-0">
+            {formattedPrice}
           </p>
         </div>
-        <p className="text-base font-semibold text-gray-900">
-          {formattedPrice}
-        </p>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };

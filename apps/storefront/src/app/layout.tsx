@@ -1,15 +1,26 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 import { CartDrawer } from "@/features/cart/components/CartDrawer";
 import { Header } from "@/components/layouts/Header";
-import { Toaster } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 
-const inter = Inter({ subsets: ["latin"] });
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 export const metadata: Metadata = {
-  title: "E-shop Starter",
-  description: "Basic e-shop template built with Next.js, Tailwind CSS and Stripe.",
+  title: "Eshop Template",
+  description:
+    "Modern e-shop integration funnel template — Next.js, Express, shadcn/ui",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({
@@ -19,7 +30,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body className={inter.className}>
+      <body className={`${outfit.variable} font-sans antialiased`}>
         <CartDrawer />
         <Header />
         <Toaster position="bottom-right" richColors closeButton />
