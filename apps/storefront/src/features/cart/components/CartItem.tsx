@@ -66,6 +66,7 @@ export const CartItem = ({ item }: CartItemProps) => {
               size="icon"
               className="h-7 w-7 rounded-l-none"
               onClick={() => updateQuantity(item.id, item.quantity + 1)}
+              disabled={item.quantity >= item.stock}
               aria-label="Augmenter la quantité"
             >
               <Plus size={14} />

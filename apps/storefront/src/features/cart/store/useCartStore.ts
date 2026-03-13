@@ -12,7 +12,7 @@ export const useCartStore = create<CartState>()(
       items: [],
       isOpen: false,
 
-      addItem: (product) => {
+      addItem: (product, quantity) => {
         set((state) => {
           const existingItem = state.items.find(
             (item) => item.id === product.id
@@ -22,14 +22,14 @@ export const useCartStore = create<CartState>()(
             return {
               items: state.items.map((item) =>
                 item.id === product.id
-                  ? { ...item, quantity: item.quantity + 1 }
+                  ? { ...item, quantity: Math.min(item.quantity + (quantity || 1), product.stock) }
                   : item
               ),
             };
           }
 
           return {
-            items: [...state.items, { ...product, quantity: 1 }],
+            items: [...state.items, { ...product, quantity: Math.min(quantity || 1, product.stock), stock: product.stock }],
           };
         });
       },
@@ -47,7 +47,7 @@ export const useCartStore = create<CartState>()(
           }
           return {
             items: state.items.map((item) =>
-              item.id === id ? { ...item, quantity } : item
+              item.id === id ? { ...item, quantity: Math.min(quantity, item.stock) } : item
             ),
           };
         });

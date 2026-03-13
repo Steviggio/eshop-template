@@ -5,6 +5,7 @@ export interface CartItem {
   currency: string;
   thumbnail: string;
   quantity: number;
+  stock: number;
 }
 
 export interface CartState {
