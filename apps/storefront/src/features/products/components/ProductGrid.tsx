@@ -57,6 +57,7 @@ export const ProductGrid = ({ initialProducts }: ProductGridProps) => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full sm:w-56 pl-9"
+              aria-label="Rechercher un produit"
             />
           </div>
 
@@ -99,7 +100,7 @@ export const ProductGrid = ({ initialProducts }: ProductGridProps) => {
             <ProductCard
               key={product.id}
               product={product}
-              priority={index === 0}
+              priority={index < 4}
             />
           ))}
         </div>
