@@ -1,7 +1,9 @@
 "use client";
 
+import { memo } from "react";
 import Image from "next/image";
-import { ShoppingCart } from "lucide-react";
+import Link from "next/link";
+import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
 import { useCartStore } from "@/features/cart/store/useCartStore";
 import { Product } from "@/features/products/types";
 import { cn } from "@/lib/utils";
@@ -19,12 +21,17 @@ interface ProductCardProps {
   priority?: boolean;
 }
 
-export const ProductCard = ({
+export const ProductCard = memo(({
   product,
   className,
   priority = false,
 }: ProductCardProps) => {
-  const addItem = useCartStore((state) => state.addItem);
+  const { addItem, updateQuantity, removeItem } = useCartStore();
+  const cartQuantity = useCartStore(
+    (state) => state.items.find((item) => item.id === product.id)?.quantity ?? 0
+  );
+  
+  const isMaxStockReached = cartQuantity >= product.stock;
 
   const formattedPrice = new Intl.NumberFormat("fr-FR", {
     style: "currency",
@@ -61,12 +68,12 @@ export const ProductCard = ({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="relative aspect-3/4 w-full overflow-hidden bg-muted">
+      <Link href={`/products/${product.slug}`} className="block relative aspect-3/4 w-full overflow-hidden bg-muted">
         <Image
           src={product.thumbnail}
           alt={product.name}
           fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
           priority={priority}
         />
@@ -80,29 +87,57 @@ export const ProductCard = ({
         )}
 
         {!isOutOfStock && (
-          <div className="absolute bottom-3 right-3 translate-y-3 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 z-10">
-            <Button
-              size="icon"
-              onClick={(e) => {
-                e.preventDefault();
-                addItem(product);
-                toast.success(`${product.name} ajouté au panier !`);
-              }}
-              className="h-10 w-10 rounded-full shadow-lg"
-              aria-label="Ajouter au panier"
-            >
-              <ShoppingCart size={18} />
-            </Button>
+          <div className="absolute bottom-3 right-3 translate-y-3 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 z-20 flex" onClick={(e) => e.preventDefault()}>
+            {cartQuantity > 0 ? (
+              <div className="flex items-center h-10 rounded-full shadow-lg overflow-hidden bg-background/90 backdrop-blur-sm border border-border/50">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => cartQuantity === 1 ? removeItem(product.id) : updateQuantity(product.id, cartQuantity - 1)}
+                  className="h-full w-9 rounded-none hover:bg-muted text-foreground transition-colors"
+                  aria-label="Réduire la quantité"
+                >
+                  {cartQuantity === 1 ? <Trash2 size={16} className="text-destructive" /> : <Minus size={16} />}
+                </Button>
+                <div className="w-8 text-center text-sm font-semibold text-foreground pointer-events-none">
+                  {cartQuantity}
+                </div>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => updateQuantity(product.id, cartQuantity + 1)}
+                  disabled={isMaxStockReached}
+                  className="h-full w-9 rounded-none hover:bg-muted text-foreground transition-colors"
+                  aria-label="Augmenter la quantité"
+                >
+                  <Plus size={16} />
+                </Button>
+              </div>
+            ) : (
+              <Button
+                size="icon"
+                onClick={() => {
+                  addItem(product);
+                  toast.success(`${product.name} ajouté au panier !`);
+                }}
+                className="h-10 w-10 rounded-full shadow-lg"
+                aria-label="Ajouter au panier"
+              >
+                <ShoppingCart size={18} />
+              </Button>
+            )}
           </div>
         )}
-      </div>
+      </Link>
 
       <CardContent className="p-4">
         <div className="flex justify-between items-start gap-2">
           <div className="space-y-1 min-w-0">
-            <h3 className="text-sm font-semibold text-card-foreground leading-none tracking-tight truncate">
-              {product.name}
-            </h3>
+            <Link href={`/products/${product.slug}`} className="hover:underline">
+              <h3 className="text-sm font-semibold text-card-foreground leading-none tracking-tight truncate">
+                {product.name}
+              </h3>
+            </Link>
             <p className="text-xs text-muted-foreground line-clamp-1 leading-relaxed">
               {product.description}
             </p>
@@ -114,4 +149,5 @@ export const ProductCard = ({
       </CardContent>
     </Card>
   );
-};
+});
+ProductCard.displayName = "ProductCard";
